@@ -34,10 +34,11 @@ install_default_python_packages() {
   local packages_file="${ASDF_PYTHON_DEFAULT_PACKAGES_FILE:-$HOME/.default-python-packages}"
 
   if [ ! -f "$packages_file" ]; then return; fi
-
+  
+  PATH="$ASDF_INSTALL_PATH/bin:$PATH" pip install pipx > /dev/null 2>&1 && rc=$? || rc=$?
   while read -r name; do
     echo -ne "\nInstalling \033[33m${name}\033[39m python package... "
-    PATH="$ASDF_INSTALL_PATH/bin:$PATH" pip install "$name" > /dev/null 2>&1 && rc=$? || rc=$?
+    PATH="$ASDF_INSTALL_PATH/bin:$PATH" pipx install "$name" > /dev/null 2>&1 && rc=$? || rc=$?
     if [[ $rc -eq 0 ]]; then
       echo -e "\033[32mSUCCESS\033[39m"
     else
